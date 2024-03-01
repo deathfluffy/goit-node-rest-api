@@ -39,15 +39,21 @@ export async function createContact(name, email, phone) {
     contacts.push(newContact);
     await updateContacts(contacts);
     return newContact;
-  }
-  export const updateContactById = async (id, name, email, phone) => {
+}
+
+
+export const updateContactById = async (id, name, email, phone) => {
     const contacts = await listContacts();
     const index = contacts.findIndex(item => item.id === id);
     if (index === -1) {
         return null;
     }
-    contacts[index] = { ...contacts[index], name, email, phone };
+
+    if (name !== undefined) contacts[index].name = name;
+    if (email !== undefined) contacts[index].email = email;
+    if (phone !== undefined) contacts[index].phone = phone;
+
     await updateContacts(contacts);
 
     return contacts[index];
-}
+};

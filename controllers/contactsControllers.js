@@ -44,11 +44,12 @@ export const deleteContact = async(req, res, next) => {
 
 export const createContact = async(req, res, next) => {
     try {
-        const { error } = createContactSchema.validate(req.body);
+        const { name, email, phone } = req.body; 
+        const { error } = createContactSchema.validate({ name, email, phone }); 
         if (error) {
             throw HttpError(400, error.message);
         }
-        const result = await contactsService.createContact(req.body);
+        const result = await contactsService.createContact(name, email, phone); 
 
         res.status(201).json(result);
     }
@@ -57,14 +58,16 @@ export const createContact = async(req, res, next) => {
     }
 };
 
+
 export const updateContact = async (req, res, next) => {
     try {
-        const { error } = updateContactSchema.validate(req.body);
+        const { name, email, phone } = req.body;
+        const { error } = updateContactSchema.validate({ name, email, phone }); 
         if (error) {
             throw HttpError(400, error.message);
         }
         const {id} = req.params;
-        const result = await contactsService.updateContactById(id, req.body);
+        const result = await contactsService.updateContactById(id, name, email, phone);
         if (!result) {
             throw HttpError(404, `Contact with id=${id} not found`);
         }
