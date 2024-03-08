@@ -4,7 +4,7 @@ import {
   createContactSchema,
   updateContactSchema,
 } from "../schemas/contactsSchemas.js";
-
+import ctrlWrapper from "../decorators/ctrlWrapper.js";
 export const getAllContacts = async (req, res, next) => {
   try {
     const result = await contactsService.listContacts();
@@ -109,3 +109,11 @@ export const updateStatusContact = async (req, res, next) => {
     next(error);
   }
 };
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  createContact : ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
+}
