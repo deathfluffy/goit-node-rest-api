@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 import HttpError from "../helpers/HttpError.js";
 
 import { findUser } from "../services/authServices.js";
-
+import dotenv from 'dotenv'
+dotenv.config()
 const { JWT_SECRET } = process.env;
 
 const authenticate = async (req, _, next) => {
@@ -23,7 +24,7 @@ const authenticate = async (req, _, next) => {
             return next(HttpError(401, "User not found"));
         }
         if(!user.token) {
-            return next(HttpError(401, "User already signout"));
+            return next(HttpError(401, "User already logout"));
         }
         req.user = user;
         next();

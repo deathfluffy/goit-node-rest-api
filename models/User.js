@@ -2,12 +2,13 @@ import  {Schema, model } from "mongoose";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
-import { emailRegexp, packages } from "../constants/user-constants.js";
+import { emailRegexp, packages, passwordRegexp } from "../constants/user-constants.js";
 
 const userSchema = new Schema({
     password: {
       type: String,
       required: [true, 'Password is required'],
+      match: passwordRegexp,
     },
     email: {
       type: String,

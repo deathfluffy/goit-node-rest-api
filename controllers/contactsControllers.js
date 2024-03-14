@@ -51,7 +51,7 @@ export const deleteContact = async (req, res, next) => {
 export const createContact = async (req, res, next) => {
   try {
     const { name, email, phone, favorite } = req.body;
-
+    const { _id: owner } = req.user
     const { error } = createContactSchema.validate({
       name,
       email,
@@ -61,8 +61,8 @@ export const createContact = async (req, res, next) => {
     if (error) {
       throw HttpError(400, error.message);
     }
-    const { _id: owner } = req.user;
-    const result = await contactsService.createContact({ ...req.body, owner });
+
+    const result = await contactsService.createContact({name, email, phone, favorite}, owner );
 
     res.status(201).json(result);
   } catch (error) {
@@ -73,6 +73,8 @@ export const createContact = async (req, res, next) => {
 export const updateContact = async (req, res, next) => {
   try {
     const { name, email, phone, favorite } = req.body;
+    const { id } = req.params;
+    const { _id: owner } = req.user;
     const { error } = updateContactSchema.validate({
       name,
       email,
@@ -82,8 +84,7 @@ export const updateContact = async (req, res, next) => {
     if (error) {
       throw HttpError(400, error.message);
     }
-    const { id } = req.params;
-    const { _id: owner } = req.user;
+   
     const result = await contactsService.updateContactById(
       { _id: id, owner },
       req.body
@@ -98,15 +99,12 @@ export const updateContact = async (req, res, next) => {
   }
 };
 export const updateStatusContact = async (req, res, next) => {
-  const { id } = req.params;
-  const { favorite } = req.body;
-
   try {
     const { id } = req.params;
-    const { _id: owner } = req.user;
+    const { favorite } = req.body
+    const { _id: owner } = req.user
     const result = await contactsService.updateStatusContact(
-      { _id: id, owner },
-      req.body
+      {favorite}, owner, id
     );
     if (!result) {
       throw HttpError(404, `Not found`);
