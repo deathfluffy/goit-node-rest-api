@@ -10,7 +10,6 @@ import dotenv from "dotenv";
 dotenv.config();
 const { JWT_SECRET } = process.env;
 
-
 const register = async (req, res) => {
   const { email } = req.body;
   const user = await authServices.findUser({ email });
@@ -47,6 +46,7 @@ const login = async (req, res) => {
   };
 
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+  await authServices.updateUser({ _id: id }, { token });
 
   res.json({
     token,
