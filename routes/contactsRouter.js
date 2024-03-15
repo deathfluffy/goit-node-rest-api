@@ -13,14 +13,14 @@ contactsRouter.use(authenticate)
 
 contactsRouter.get("/",   conctactsControllers.getAllContacts);
 
-contactsRouter.get("/:id",  isValidId, conctactsControllers.getOneContact);
+contactsRouter.get("/:id",   isValidId, conctactsControllers.getOneContact);
 
-contactsRouter.post("/",  conctactsControllers.createContact, validateBody(createContactSchema));
+contactsRouter.post("/",   conctactsControllers.createContact, validateBody(createContactSchema));
 
-contactsRouter.delete("/:id",  isValidId, conctactsControllers.deleteContact);
+contactsRouter.delete("/:id",   isValidId, conctactsControllers.deleteContact);
 
 contactsRouter.put("/:id",  isValidId, conctactsControllers.updateContact, validateBody(updateContactSchema));
 
-contactsRouter.patch("/:id/favorite", isValidId, conctactsControllers.updateStatusContact, validateBody(updateFavoriteSchema));
+contactsRouter.patch("/:id/favorite",  isValidId, conctactsControllers.updateStatusContact, validateBody(updateFavoriteSchema));
 
 export default contactsRouter;
