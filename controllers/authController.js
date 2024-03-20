@@ -1,17 +1,18 @@
 import jwt from "jsonwebtoken";
-
+import { v4 as uuidv4 } from "uuid";
 import * as authServices from "../services/authServices.js";
 import path from "path";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import fs from "fs/promises";
-
+import upload from "../middlewares/upload.js";
 import dotenv from "dotenv";
 import { resizeImage } from "../middlewares/imageHelpers.js";
 dotenv.config();
 const { JWT_SECRET } = process.env;
 
-
+const tmpDir = path.resolve("tmp");
+const avatarsDir = path.resolve("public/avatars");
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -73,29 +74,27 @@ const logout = async (req, res) => {
     message: "Logout success",
   });
 };
+
 const updateAvatar = async (req, res) => {
- 
-      const { path: oldPath, originalname } = req.file;
-      const { _id: userId } = req.user; 
+  const { path: oldPath, originalname } = req.file;
+  const { _id: userId } = req.user;
 
-    
-      await resizeImage(oldPath);
+  await fs.mkdir(tmpDir, { recursive: true });
 
-      
-      const newImageName = `${userId}_${originalname}`;
+  await resizeImage(oldPath);
 
-      const newPath = path.join("public", "avatars", newImageName);
+  const newImageName = `${userId}_${uuidv4()}${path.extname(originalname)}`;
 
-     
-      await fs.rename(oldPath, newPath);
+  const newPath = path.join(avatarsDir, newImageName);
+  await fs.rename(oldPath, newPath);
 
+  const updatedUser = await authServices.updateUser(userId, {
+    avatarURL: `/avatars/${newImageName}`,
+  });
 
-      const result = await authServices.updateUser(userId, { avatarURL: newPath });
-
-      res.status(200).json({
-          avatarURL: result.avatarURL
-      });
-
+  res.status(200).json({
+    avatarURL: updatedUser.avatarURL,
+  });
 };
 
 export default {
