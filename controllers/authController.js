@@ -5,7 +5,6 @@ import path from "path";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import fs from "fs/promises";
-import upload from "../middlewares/upload.js";
 import dotenv from "dotenv";
 import { resizeImage } from "../middlewares/imageHelpers.js";
 dotenv.config();
