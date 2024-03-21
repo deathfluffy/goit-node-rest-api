@@ -75,6 +75,9 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "The file was not attached" });
+  }
   const { path: oldPath, originalname } = req.file;
   const { _id: userId } = req.user;
 
