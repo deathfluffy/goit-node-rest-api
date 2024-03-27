@@ -43,18 +43,16 @@ const register = async (req, res) => {
 };
 
 const verify = async (req, res) => {
- 
   const { verificationToken } = req.params;
    
   const user = await authServices.findUser({ verificationToken });
-
 
   if (!user) {
     throw HttpError(404, "verificationToken not found");
   }
 
   
-  await authServices.updateUser({ _id: user._id }, { verify: true, verificationToken: null });
+  await authServices.updateUser({ _id: user._id }, { verify: true, verificationToken:  null});
 
   res.json({
     message: "Email verification successful"
