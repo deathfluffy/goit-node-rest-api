@@ -1,7 +1,6 @@
 import  {Schema, model } from "mongoose";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
-import { validator } from "../helpers/Validator.js";
 import { emailRegexp, packages, passwordRegexp } from "../constants/user-constants.js";
 
 const userSchema = new Schema({
@@ -34,10 +33,6 @@ const userSchema = new Schema({
     },
     verificationToken: {
       type: String,
-      validate: {
-        validator: validator,
-        message: 'Verify token is required'
-    }
     },
 }, {versionKey: false, timestamps: true});
 
